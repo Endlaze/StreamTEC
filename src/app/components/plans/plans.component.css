@@ -1,0 +1,12 @@
+.card-icon {
+  font-size: 6em;
+} 
+.card-height{
+  height: 25e;
+} 
+.zoom{
+  transition: transform .2;
+} 
+.zoom:hover {
+  transform: scale(1.05);
+}
