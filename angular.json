@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "StreamTEC"
+    }
+  },
+  "defaultProject": "StreamTEC",
+  "cli": {
+    "analytics": "31335ccd-7a52-4a46-befb-2adfc73472c1"
+  }
 }
