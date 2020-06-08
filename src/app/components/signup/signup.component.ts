@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { EMAIL_REGEXP, NUMBER_REGEXP, TEXT_REGEXP, NUMTEXT_REGEXP, PASSWORD_REGEXP } from '../../const/regex.constants'
+import { UserService } from '../../services/user-service/user.service'
 
 @Component({
   selector: 'app-signup',
@@ -12,7 +13,7 @@ export class SignupComponent implements OnInit {
   signupForm: FormGroup
   submitted: Boolean = false
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private userService: UserService) { }
 
   ngOnInit() {
     this.signupForm = this.formBuilder.group({
@@ -27,9 +28,14 @@ export class SignupComponent implements OnInit {
   get form() { return this.signupForm.controls }
 
   signup = () => {
-    let formdata = this.signupForm.getRawValue();
+    let user = this.signupForm.getRawValue();
     this.submitted = true;
     if (this.signupForm.invalid) return
+
+    this.userService.createUser(user).subscribe(res => {
+      console.log(res.status)
+      console.log(res.body)
+    })
     this.signupForm.reset()
     this.submitted = false;
 

@@ -1,17 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { EMAIL_REGEXP, NUMBER_REGEXP, TEXT_REGEXP, NUMTEXT_REGEXP, PASSWORD_REGEXP } from '../../const/regex.constants'
+import { EMAIL_REGEXP } from '../../const/regex.constants'
+import { StorageService, SESSION_STORAGE } from 'ngx-webstorage-service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthGuard } from '../../services/auth/auth.guard';
+import { AuthService } from '../../services/auth/auth.service'
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent implements OnInit {
   loginForm: FormGroup
   submitted: Boolean = false
+  loading = false;
+  returnUrl: string;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder,
+    @Inject(SESSION_STORAGE) private storage: StorageService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private guard: AuthGuard,
+    private authService: AuthService
+
+  ) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -23,14 +37,36 @@ export class LoginComponent implements OnInit {
   get form() { return this.loginForm.controls }
 
   login = () => {
-    let formData = this.loginForm.getRawValue();
+    let user = this.loginForm.getRawValue();
     this.submitted = true;
     if (this.loginForm.invalid) return
-    console.log(formData)
+    this.loading = true;
+
+    this.authService.login(user)
+      .subscribe(res => this.authSuccess(res),
+        err => this.authError(err));
+  }
+
+  authSuccess(res) {
+    let user = res.user;
+
+    this.loading = false;
+    this.guard.setSession(res.token);
+    // this.toastr.clear();
+    this.storage.set('current-user', user);
+    this.loading = false;
+    console.log(res)
+    console.log('Usuario autenticado', 'Acceso concedido');
     this.loginForm.reset()
-    this.submitted = false;
+
+    let routeToNavigate = (user.membership === null) ? '/plans' : '/store';
+    this.router.navigate([routeToNavigate]);
+
+  }
+
+  authError(err) {
+    this.loading = false;
+    console.log('Usuario o contraseña incorrectos', 'Autentificación Incorrecta');
+    // this.toastr.error('Usuario o contraseña incorrectos', 'Autentificación Incorrecta');
   }
 }
-
-
-
