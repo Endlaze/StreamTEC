@@ -12,7 +12,6 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   public login(user){
-    console.log(this.loginUrl)
     return this.http.post(this.loginUrl, user, {});
   }
 }

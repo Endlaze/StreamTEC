@@ -60,10 +60,13 @@ body {
     padding: 0 25px;
 }
 
-.page-body {
-}
 
 .center {
     display: flex;
     justify-content: center;
 }
+
+.body-wrapper {
+    padding-top: 150px;
+}
+

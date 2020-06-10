@@ -3,6 +3,7 @@ import { PLANS_INFO } from '../../const/plans.constants'
 import { StorageService, SESSION_STORAGE } from 'ngx-webstorage-service';
 import { MembershipService } from '../../services/membership/membership.service'
 import { Router, ActivatedRoute } from '@angular/router';
+import { AuthGuard } from '../../services/auth/auth.guard';
 
 @Component({
   selector: 'app-plans',
@@ -12,6 +13,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 export class PlansComponent implements OnInit {
   plansCards = []
+  currentUser
 
 
   constructor(
@@ -19,56 +21,50 @@ export class PlansComponent implements OnInit {
     @Inject(SESSION_STORAGE) private storage: StorageService,
     private route: ActivatedRoute,
     private router: Router,
-  ) {
-
-    this.plansCards = PLANS_INFO
-  }
+    private guard: AuthGuard
+  ) { }
 
   ngOnInit(): void {
-
+    this.plansCards = PLANS_INFO
+    this.currentUser = this.storage.get('current-user');
+   
   }
 
   selectPlan = (idPlan) => {
-    let currentUser = this.storage.get('current-user');
-    let membershipInfo = { userEmail: currentUser.email, memType: parseInt(idPlan) }
-
-    this.membershipService.createMembership(membershipInfo)
-      .subscribe(res => this.membershipSuccess(res, currentUser),
-        err => this.membershipError(err));
-  }
+    if (!this.checkLoggedIn()) {
+      this.router.navigate([`signup/${idPlan}`]);
+      return;
+    }
 
 
-  updatePlan = (idPlan) => {
-    let currentUser = this.storage.get('current-user');
+    let membershipInfo = { email: this.currentUser.email, membership: parseInt(idPlan) }
 
-    let membershipInfo = { userEmail: currentUser.email, memType: parseInt(idPlan) }
-
-    this.membershipService.updateMembership(membershipInfo)
-      .subscribe(res => this.membershipSuccess(res, currentUser),
+    this.membershipService.addMembership(membershipInfo)
+      .subscribe(res => this.membershipSuccess(res, this.currentUser),
         err => this.membershipError(err));
   }
 
   membershipSuccess = (res, currentUser) => {
-    currentUser.membership = res.membership;
+    this.currentUser.membership = res.membership;
     this.storage.set('current-user', currentUser);
-    this.router.navigate(['/store']);
   }
 
   membershipError = (err) => {
     console.log(err);
   }
 
-  isButtonDisabled = (memType) => {
-    let currentUser = this.storage.get('current-user');
+  isButtonDisabled = (membership) => {
 
-    let disabled = (this.userHasMembership() && currentUser.membership.memType === parseInt(memType))
+    if (!this.checkLoggedIn()) {
+      return false
+    }
 
-    return disabled
+    return (this.currentUser.membership === parseInt(membership))
   }
 
-  userHasMembership = () => {
-    let currentUser = this.storage.get('current-user');
 
-    return (currentUser.membership !== null);
+
+  checkLoggedIn = () => {
+    return this.guard.isUserLoggedIn();
   }
 }

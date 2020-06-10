@@ -5,8 +5,16 @@
   height: 25e;
 } 
 .zoom{
-  transition: transform .2;
+  transition: transform .2s;
 } 
 .zoom:hover {
   transform: scale(1.05);
+}
+
+.min-h{
+  min-height: 452px;
+}
+
+.desc-h{
+  min-height: 103px;
 }

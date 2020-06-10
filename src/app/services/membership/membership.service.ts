@@ -12,11 +12,7 @@ export class MembershipService {
 
   constructor(private http: HttpClient) { }
 
-  public createMembership(membershipInfo) {
-    return this.http.post(this.membershipUrl + '/create', membershipInfo, {});
-  }
-
-  public updateMembership(membershipInfo) {
-    return this.http.post(this.membershipUrl + '/update', membershipInfo, {});
+  public addMembership(membershipInfo) {
+    return this.http.post(this.membershipUrl + '/add', membershipInfo);
   }
 }

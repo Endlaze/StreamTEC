@@ -22,4 +22,11 @@ export class AuthGuard implements CanActivate {
   setSession(token: string) {
     this.locker.set(DRIVERS.SESSION, 'currentSession', token);
   }
+
+  isUserLoggedIn(){
+    if (this.getSession()) {
+      return true;
+    }
+    return false
+  }
 }

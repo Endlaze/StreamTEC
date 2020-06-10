@@ -28,6 +28,11 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (this.guard.isUserLoggedIn()) {
+      this.router.navigate(['/store']);
+      return;
+    }
+
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.pattern(new RegExp(EMAIL_REGEXP))]],
       password: ['', [Validators.required]],
@@ -55,7 +60,6 @@ export class LoginComponent implements OnInit {
     // this.toastr.clear();
     this.storage.set('current-user', user);
     this.loading = false;
-    console.log(res)
     console.log('Usuario autenticado', 'Acceso concedido');
     this.loginForm.reset()
 
