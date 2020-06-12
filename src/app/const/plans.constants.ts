@@ -1,7 +1,7 @@
 export const PLANS_INFO = [
   {
     id: 1,
-    icon: 'fas fa-tv',
+    icon: 'fas fa-film',
     title: 'Video',
     desc: 'Nuestro plan de video te permite disfrutar de una gran variedad de contenido audiovisual, incluyendo los estrenos más recientes.',
     price: '8.99'

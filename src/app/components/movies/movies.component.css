@@ -44,3 +44,7 @@
   text-align: left;
   padding: 10px 10px 30px;   
 }
+
+.disc-price{
+  text-decoration:line-through;
+}

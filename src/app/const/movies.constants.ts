@@ -150,3 +150,12 @@ export const MOVIES = [
       price: 8.5
     },
   ]
+
+
+
+  export const fetchMovie = (IdMovie) => new Promise((resolve, reject) => {
+    let movie = MOVIES.find((movie) => {
+        return (movie.id === IdMovie)
+    })
+    resolve(movie)
+});

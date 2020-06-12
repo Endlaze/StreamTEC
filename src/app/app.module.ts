@@ -12,15 +12,20 @@ import { PlansComponent } from './components/plans/plans.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LockerModule } from 'angular-safeguard';
 import { StorageServiceModule } from 'ngx-webstorage-service';
-import {UserService} from './services/user-service/user.service'
-import {AuthService} from './services/auth/auth.service'
-import  {AuthGuard} from './services/auth/auth.guard';
+import { UserService } from './services/user-service/user.service'
+import { AuthService } from './services/auth/auth.service'
+import { AuthGuard } from './services/auth/auth.guard';
 import { StoreComponent } from './components/store/store.component';
 import { MoviesComponent } from './components/movies/movies.component';
 import { MusicComponent } from './components/music/music.component';
 import { AlbumPreviewComponent } from './components/album-preview/album-preview.component'
-import {ProductService} from './services/product/product.service'
-
+import { ProductService } from './services/product/product.service';
+import { LibraryComponent } from './components/library/library.component';
+import { TabComponent } from './generics/tab/tab.component';
+import { LibraryTabsComponent } from './components/library-tabs/library-tabs.component';
+import { MusicLibraryComponent } from './components/music-library/music-library.component';
+import { MoviesLibraryComponent } from './components/movies-library/movies-library.component';
+import { PlaylistModalComponent } from './components/playlist-modal/playlist-modal.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +38,15 @@ import {ProductService} from './services/product/product.service'
     StoreComponent,
     MoviesComponent,
     MusicComponent,
-    AlbumPreviewComponent
+    AlbumPreviewComponent,
+    LibraryComponent,
+    TabComponent,
+    LibraryTabsComponent,
+    MusicLibraryComponent,
+    MoviesLibraryComponent,
+    PlaylistModalComponent,
+
+
   ],
   imports: [
     BrowserModule,
@@ -42,9 +55,10 @@ import {ProductService} from './services/product/product.service'
     ReactiveFormsModule,
     HttpClientModule,
     LockerModule,
-    StorageServiceModule
+    StorageServiceModule,
   ],
   providers: [UserService, AuthService, AuthGuard, ProductService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents:[PlaylistModalComponent]
 })
 export class AppModule { }
