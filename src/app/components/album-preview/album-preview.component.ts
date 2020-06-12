@@ -5,6 +5,8 @@ import { AuthGuard } from '../../services/auth/auth.guard'
 import { StorageService, SESSION_STORAGE } from 'ngx-webstorage-service';
 import { MUSIC } from '../../const/music.constants'
 import { ProductService } from 'src/app/services/product/product.service';
+import { PlaylistModalComponent } from '../playlist-modal/playlist-modal.component'
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -18,13 +20,16 @@ export class AlbumPreviewComponent implements OnInit {
   ownedTracks = new Map();
   currentUser
 
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
-    @Inject(SESSION_STORAGE) private storage: StorageService, private authGuard: AuthGuard) { }
+    @Inject(SESSION_STORAGE) private storage: StorageService, private authGuard: AuthGuard,
+    private modalService: NgbModal) { }
 
   ngOnInit(): void {
+
     let albumIdParam = parseInt(this.activatedRoute.snapshot.params['idAlbum']);
 
     fetchAlbum(albumIdParam).then((album) => {
@@ -42,8 +47,8 @@ export class AlbumPreviewComponent implements OnInit {
       this.currentUser = this.storage.get('current-user');
 
       this.fetchOwnedAlbum(this.album.id, this.currentUser.albums).then((ownedAlbum: any) => {
-
         this.updateOwnedTracks(ownedAlbum.tracks).then(tracks => {
+
           this.ownedTracks = new Map(tracks);
         })
       })
@@ -61,10 +66,11 @@ export class AlbumPreviewComponent implements OnInit {
       return;
     }
 
+    track.price = (this.isUsrBirthMonth(this.currentUser.birthdate)) ? (track.price - (track.price * 0.05)) : track.price
+
     let purchase = {
       email: this.currentUser.email, product: { idAlbum: this.album.id, track: { number: track.number, purchaseDate: Date.now(), purchasePrice: track.price } }
     }
-
 
     this.productService.createProduct(purchase, 2)
       .subscribe(res => this.trackSuccess(res),
@@ -85,10 +91,6 @@ export class AlbumPreviewComponent implements OnInit {
     // this.toastr.error('Usuario o contraseña incorrectos', 'Autentificación Incorrecta');
   }
 
-  addToPlaylist = (album) => {
-    console.log(album)
-  }
-
   updateOwnedTracks = (ownedTracks) => {
     let promiseArray = []
     ownedTracks.map(track => {
@@ -107,4 +109,26 @@ export class AlbumPreviewComponent implements OnInit {
 
     resolve(album)
   });
+
+  addToPlaylist = (track) => {
+    track.idAlbum = this.album.id
+
+    const modalRef = this.modalService.open(PlaylistModalComponent);
+    modalRef.componentInstance.product = track;
+    modalRef.componentInstance.type = 2;
+  }
+
+  isUsrBirthMonth = (birthdate) => {
+    birthdate = new Date(birthdate)
+    let currentDate = new Date();
+
+    return birthdate.getMonth() === currentDate.getMonth()
+  }
+
+  isUsrBirthday = (birthdate) => {
+    birthdate = new Date(birthdate)
+    let currentDate = new Date();
+
+    return birthdate.getUTCDate() === currentDate.getUTCDate()
+  }
 }

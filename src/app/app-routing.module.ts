@@ -8,6 +8,9 @@ import { StoreComponent } from '../app/components/store/store.component';
 import { MoviesComponent } from '../app/components/movies/movies.component';
 import { MusicComponent } from '../app/components/music/music.component';
 import { AlbumPreviewComponent } from './components/album-preview/album-preview.component';
+import { LibraryComponent } from './components/library/library.component'
+import { MoviesLibraryComponent } from './components/movies-library/movies-library.component'
+import {MusicLibraryComponent} from './components/music-library/music-library.component'
 
 const routes: Routes = [
   { path: '', redirectTo: '/plans', pathMatch: 'full' },
@@ -18,6 +21,8 @@ const routes: Routes = [
   { path: 'movies', component: MoviesComponent },
   { path: 'music', component: MusicComponent },
   { path: 'album/:idAlbum', component: AlbumPreviewComponent },
+  { path: 'music-library', component: LibraryComponent, canActivate: [AuthGuard] },
+  { path: 'movies-library', component: MoviesLibraryComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '' }
 ];
 

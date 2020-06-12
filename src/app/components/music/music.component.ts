@@ -36,11 +36,7 @@ export class MusicComponent implements OnInit {
   checkLoggedIn = () => {
     return this.authGuard.isUserLoggedIn();
   }
-
-  buy = (album) => {
-    console.log(album) 
-  }
-
+  
   previewAlbum(album) {
     this.router.navigate([`/album/${album.id}`]);
   }

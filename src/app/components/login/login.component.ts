@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     if (this.guard.isUserLoggedIn()) {
-      this.router.navigate(['/store']);
+      this.router.navigate(['/library']);
       return;
     }
 
@@ -54,7 +54,6 @@ export class LoginComponent implements OnInit {
 
   authSuccess(res) {
     let user = res.user;
-
     this.loading = false;
     this.guard.setSession(res.token);
     // this.toastr.clear();
@@ -63,7 +62,7 @@ export class LoginComponent implements OnInit {
     console.log('Usuario autenticado', 'Acceso concedido');
     this.loginForm.reset()
 
-    let routeToNavigate = (user.membership === null) ? '/plans' : '/store';
+    let routeToNavigate = (user.membership === null) ? '/plans' : '/movies-library';
     this.router.navigate([routeToNavigate]);
 
   }

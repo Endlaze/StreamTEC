@@ -26,7 +26,7 @@ export class SignupComponent implements OnInit {
     this.selectedMembership = parseInt(this.activatedRoute.snapshot.params['planId']);
 
     if (this.guard.isUserLoggedIn() || !this.validMemberships.includes(this.selectedMembership)) {
-      this.router.navigate(['/store']);
+      this.router.navigate(['/library']);
       return;
     }
   }
@@ -53,11 +53,10 @@ export class SignupComponent implements OnInit {
     user.membership = this.selectedMembership;
 
     this.userService.createUser(user).subscribe(res => {
-      console.log(res.body)
-
+      this.router.navigate(['/login'])
     })
+
     this.signupForm.reset()
     this.submitted = false;
-
   }
 }
